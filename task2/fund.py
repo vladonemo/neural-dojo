@@ -46,3 +46,9 @@ def fillGap(arr):
 
 
 data = loadSheet("fund.xls")
+x, y, everything = fillGap(data)
+y = np.asarray(y)
+y = y.reshape(-1, 1)
+scaler = MinMaxScaler(copy=True, feature_range=(0, 1))
+scaler.fit(y)
+y_scaled = scaler.transform(y)
