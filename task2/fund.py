@@ -87,14 +87,16 @@ length = x.shape[0]
 train_length = int(train * length)
 x_train = x[0: train_length, :]
 y_train = y[0: train_length]
+x_test = x[train_length: length, :]
+y_test = y[train_length: length]
 
 model = Sequential()
 model.add(Dense(20, input_shape=(window,), activation="sigmoid"))
 model.add(Dense(1))
 model.compile(optimizer="sgd", loss="mse", metrics=["acc"])
-model.fit(x_train, y_train, epochs=100, batch_size=25, verbose=0)
+model.fit(x_train, y_train, epochs=1000, batch_size=25, verbose=0)
 model.evaluate(x_train, y_train)
 
-predicted = model.predict(x_train)
-plt.plot(y_train, "green", predicted, "red")
+predicted = model.predict(x_test)
+plt.plot(y_test, "green", predicted, "red")
 plt.show()
