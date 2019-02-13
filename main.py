@@ -16,6 +16,7 @@ performance = []
 for i in range(epochs):
     model.fit(x=xor_data, y=answers, batch_size=1, epochs=1, verbose=0)
     loss, acc = model.evaluate(x=xor_data, y=answers, verbose=0)
+    performance.append(acc)
 
 performance = np.asarray(performance)
 plt.plot(performance)
@@ -23,6 +24,7 @@ plt.grid()
 plt.title("Performance during training")
 plt.xlabel("Epochs")
 plt.ylabel("Accuracy")
+plt.show()
 
 print(model.predict(xor_data))
 print(model.summary())
