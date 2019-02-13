@@ -1,8 +1,12 @@
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.layers import Dense
 from datetime import timedelta, datetime
 import xlrd
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 import matplotlib.pyplot as plt
+
+window = 5
 
 
 def loadSheet(path):
@@ -46,20 +50,20 @@ def fillGap(arr):
     return [x, y, all]
 
 
-def createDataset(scaled, window=5):
+def createDataset(scaled, window_size):
     actual = 0
-    target = window
+    target = window_size
     length = scaled.shape[0]
     x = []
     y = []
 
     while target < length:
-        x.append(scaled[actual: actual + window].tolist())
+        x.append(scaled[actual: actual + window_size].tolist())
         y.append(scaled[target])
         target = target + 1
         actual = actual + 1
     x = np.asarray(x)
-    x = x.reshape(x.shape[0], window)
+    x = x.reshape(x.shape[0], window_size)
     y = np.asarray(y)
     return x, y
 
@@ -77,5 +81,15 @@ plt.show()
 y = y.reshape(-1, 1)
 scaler = MinMaxScaler(copy=True, feature_range=(0, 1))
 scaler.fit(y)
-x, y = createDataset(scaler.transform(y))
+x, y = createDataset(scaler.transform(y), window)
 train = 0.8
+length = x.shape[0]
+x_train = x[0: int(train * length), :]
+y_train = y[0: int(train * length)]
+
+model = Sequential()
+model.add(Dense(20, input_shape=(window,), activation="sigmoid"))
+model.add(Dense(1))
+model.compile(optimizer="sgd", loss="mse", metrics=["acc"])
+model.fit(x_train, y_train, epochs=100, batch_size=25, verbose=0)
+model.evaluate(x_train, y_train)
