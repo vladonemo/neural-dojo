@@ -2,6 +2,7 @@ from datetime import timedelta, datetime
 import xlrd
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def loadSheet(path):
@@ -48,6 +49,11 @@ def fillGap(arr):
 data = loadSheet("fund.xls")
 x, y, everything = fillGap(data)
 y = np.asarray(y)
+plt.plot(y)
+plt.xlabel("Days")
+plt.ylabel("Fund price [EUR]")
+plt.title("Funt value over time")
+plt.show()
 y = y.reshape(-1, 1)
 scaler = MinMaxScaler(copy=True, feature_range=(0, 1))
 scaler.fit(y)
