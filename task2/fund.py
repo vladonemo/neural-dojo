@@ -84,8 +84,9 @@ scaler.fit(y)
 x, y = createDataset(scaler.transform(y), window)
 train = 0.8
 length = x.shape[0]
-x_train = x[0: int(train * length), :]
-y_train = y[0: int(train * length)]
+train_length = int(train * length)
+x_train = x[0: train_length, :]
+y_train = y[0: train_length]
 
 model = Sequential()
 model.add(Dense(20, input_shape=(window,), activation="sigmoid"))
@@ -93,3 +94,7 @@ model.add(Dense(1))
 model.compile(optimizer="sgd", loss="mse", metrics=["acc"])
 model.fit(x_train, y_train, epochs=100, batch_size=25, verbose=0)
 model.evaluate(x_train, y_train)
+
+predicted = model.predict(x_train)
+plt.plot(y_train, "green", predicted, "red")
+plt.show()
