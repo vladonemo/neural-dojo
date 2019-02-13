@@ -46,15 +46,36 @@ def fillGap(arr):
     return [x, y, all]
 
 
+def createDataset(scaled, window=5):
+    actual = 0
+    target = window
+    length = scaled.shape[0]
+    x = []
+    y = []
+
+    while target < length:
+        x.append(scaled[actual: actual + window].tolist())
+        y.append(scaled[target])
+        target = target + 1
+        actual = actual + 1
+    x = np.asarray(x)
+    x = x.reshape(x.shape[0], window)
+    y = np.asarray(y)
+    return x, y
+
+
 data = loadSheet("fund.xls")
 x, y, everything = fillGap(data)
 y = np.asarray(y)
+
 plt.plot(y)
 plt.xlabel("Days")
 plt.ylabel("Fund price [EUR]")
 plt.title("Funt value over time")
 plt.show()
+
 y = y.reshape(-1, 1)
 scaler = MinMaxScaler(copy=True, feature_range=(0, 1))
 scaler.fit(y)
-y_scaled = scaler.transform(y)
+x, y = createDataset(scaler.transform(y))
+train = 0.8
