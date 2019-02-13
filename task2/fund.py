@@ -20,3 +20,29 @@ def loadSheet(path):
             break
 
     return list(reversed(arr))
+
+
+def fillGap(arr):
+        length = len(arr)
+        x = []
+        y = []
+        all = []
+        for i in range(length):
+            if i != 0:
+                delta = arr[i][0] - arr[i - 1][0]
+                diff = delta.days
+                if diff > 1:
+                    date = arr[i - 1][0]
+                    diff = diff - 1
+                    for j in range(diff):
+                        date += timedelta(days=1)
+                        x.append(date)
+                        y.append(arr[i - 1][1])
+                        all.append([date, arr[i - 1][1]])
+            x.append(arr[i][0])
+            y.append(arr[i][1])
+            all.append([arr[i][0], arr[i][1]])
+        return [x, y, all]
+
+
+data = loadSheet("fund.xls")
